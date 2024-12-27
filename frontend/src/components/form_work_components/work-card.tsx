@@ -1,6 +1,5 @@
 import {
   PenSquare,
-  Copy,
   Briefcase,
   Building2,
   Clock,
@@ -97,9 +96,11 @@ const WorkExperienceCard: React.FC = () => {
                     {new Date(experience.fechaInicio).toLocaleDateString()} -{" "}
                     {experience.trabajaActualmente
                       ? "Actualidad"
-                      : new Date(
+                      : experience.fechaTerminacion
+                      ? new Date(
                           experience.fechaTerminacion
-                        ).toLocaleDateString()}
+                        ).toLocaleDateString()
+                      : "Fecha no disponible"}
                   </p>
                 </div>
               </div>

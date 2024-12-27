@@ -1,3 +1,4 @@
+// @ts-ignore
 import { useAcademicStore } from "@/api/useAcademicStore";
 import AcademicForm from "@/components/formcompoents/academic-form";
 import EducationCard from "@/components/formcompoents/education-card";

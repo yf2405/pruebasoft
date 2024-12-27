@@ -21,7 +21,7 @@ interface WorkExperienceProps {
   fechaInicio: string;
   fechaTerminacion: string | null;
   trabajaActualmente: boolean;
-  logros: string[];
+  logros: string | string[];
   recursosAdicionales: File[];
 }
 
@@ -33,8 +33,7 @@ interface WorkFormProps {
 
 export default function WorkForm({
   createWorkExperience,
-  loading,
-  error
+  loading
 }: WorkFormProps) {
   const [experiences, setExperiences] = useState<WorkExperienceProps[]>([
     {
@@ -79,7 +78,6 @@ export default function WorkForm({
     );
     setExperiences(updated);
   };
-
   const handleSave = async () => {
     for (const exp of experiences) {
       if (
@@ -87,7 +85,8 @@ export default function WorkForm({
         !exp.empresa ||
         !exp.fechaInicio ||
         (!exp.trabajaActualmente && !exp.fechaTerminacion) ||
-        !exp.logros.trim()
+        !exp.logros ||
+        (Array.isArray(exp.logros) && exp.logros.some((logro) => !logro.trim()))
       ) {
         alert("Por favor completa todos los campos antes de guardar.");
         return;
@@ -101,7 +100,9 @@ export default function WorkForm({
           ? new Date(exp.fechaTerminacion).toISOString()
           : null,
         trabajaActualmente: exp.trabajaActualmente,
-        logros: exp.logros.trim(),
+        logros: Array.isArray(exp.logros)
+          ? exp.logros.map((logro) => logro.trim()) // Limpia cada logro en el array
+          : exp.logros.trim(), // Limpia el string directamente si no es un array
         recursosAdicionales: exp.recursosAdicionales
       };
 

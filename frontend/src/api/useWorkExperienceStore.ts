@@ -56,7 +56,7 @@ const useWorkExperienceStore = create<WorkExperienceStore>((set) => ({
         workExperiences: [...state.workExperiences, response.data],
         loading: false,
       }));
-    } catch (error) {
+    } catch (error:any) {
       console.error("Error al crear la experiencia laboral:", error);
   
       let errorMessage = "Error desconocido. Por favor, intenta nuevamente.";

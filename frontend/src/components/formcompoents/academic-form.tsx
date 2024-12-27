@@ -12,15 +12,23 @@ import { Calendar as CalendarIcon } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+
 type Section = {
   title: string;
   institution: string;
   startDate: Date | null;
-  endDate: Date | null;
+  endDate: Date | null | string;
 };
 
+interface Academic {
+  _id: string;
+  titulo: string;
+  institucion: string;
+  fechaInicio: string;
+  fechaTerminacion: string;
+}
 interface AcademicFormProps {
-  createAcademic: (data: Section) => Promise<void>;
+  createAcademic: (data: Omit<Academic, "_id">) => Promise<void>;
   loading: boolean;
   error: string | null;
 }
@@ -75,26 +83,27 @@ const AcademicForm: React.FC<AcademicFormProps> = ({
           return;
         }
 
-        // Convertir las fechas a strings válidos para la API
         const newAcademic = {
           titulo: section.title.trim(),
           institucion: section.institution.trim(),
-          fechaInicio: new Date(section.startDate).toISOString(), // Convertir a formato ISO
-          fechaTerminacion: new Date(section.endDate).toISOString()
+          fechaInicio:
+            section.startDate instanceof Date
+              ? section.startDate.toISOString()
+              : new Date(section.startDate).toISOString(),
+          fechaTerminacion:
+            section.endDate instanceof Date
+              ? section.endDate.toISOString()
+              : new Date(section.endDate).toISOString()
         };
 
         // Llamar a la API para guardar
         await createAcademic(newAcademic);
       }
-
-      alert("Formación académica guardada con éxito.");
-      setSections([]); // Reiniciar las secciones después de guardar
     } catch (error) {
-      console.error(error);
-      alert("Hubo un error al guardar. Por favor intenta nuevamente.");
+      console.error("Error guardando la sección", error);
+      alert("Ocurrió un error al guardar la información.");
     }
   };
-
   if (loading) {
     return <p>Cargando información académica...</p>;
   }
@@ -157,8 +166,15 @@ const AcademicForm: React.FC<AcademicFormProps> = ({
                 <PopoverContent className="w-auto p-0" align="start">
                   <CalendarIcon
                     mode="single"
-                    selected={section.startDate}
-                    onSelect={(date) => updateSection(index, "startDate", date)}
+                    selected={section.startDate ?? undefined}
+                    onSelect={(date) => {
+                      // Asegúrate de que 'date' no sea undefined antes de actualizar el estado
+                      if (date) {
+                        updateSection(index, "startDate", date);
+                      } else {
+                        updateSection(index, "startDate", null); // En caso de que no se seleccione una fecha, asignamos null
+                      }
+                    }}
                     initialFocus
                   />
                 </PopoverContent>
@@ -186,8 +202,15 @@ const AcademicForm: React.FC<AcademicFormProps> = ({
                   <PopoverContent className="w-auto p-0" align="start">
                     <CalendarIcon
                       mode="single"
-                      selected={section.endDate}
-                      onSelect={(date) => updateSection(index, "endDate", date)}
+                      selected={section.startDate ?? undefined}
+                      onSelect={(date) => {
+                        // Asegúrate de que 'date' no sea undefined antes de actualizar el estado
+                        if (date) {
+                          updateSection(index, "startDate", date);
+                        } else {
+                          updateSection(index, "startDate", null); // En caso de que no se seleccione una fecha, asignamos null
+                        }
+                      }}
                       initialFocus
                     />
                   </PopoverContent>

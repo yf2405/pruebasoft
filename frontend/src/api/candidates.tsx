@@ -13,8 +13,8 @@ interface Candidate {
   phoneNumber: string;
   linkedin?: string;
   addedValue: string;
-  addedHappyWorkValue: String;
-  addedProfessionalValue: String;
+  addedHappyWorkValue: string;
+  addedProfessionalValue: string;
 }
 
 interface CandidateStore {

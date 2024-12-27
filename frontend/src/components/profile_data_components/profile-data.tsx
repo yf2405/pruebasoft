@@ -15,7 +15,6 @@ interface Candidate {
   addedValue: string;
   addedHappyWorkValue: string;
   addedProfessionalValue: string;
-  ideasProject: string;
 }
 
 interface ProfileDataProps {
@@ -129,11 +128,6 @@ export default function ProfileData({ candidates }: ProfileDataProps) {
                     icon: "⭐",
                     title: "Talento profesional",
                     content: candidate.addedProfessionalValue
-                  },
-                  {
-                    icon: "💡",
-                    title: "Ideas, proyectos o actividades a futuro",
-                    content: candidate.ideasProject
                   }
                 ].map((section, sectionIndex) => (
                   <div key={sectionIndex}>
