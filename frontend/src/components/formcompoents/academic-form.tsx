@@ -166,14 +166,10 @@ const AcademicForm: React.FC<AcademicFormProps> = ({
                 <PopoverContent className="w-auto p-0" align="start">
                   <CalendarIcon
                     mode="single"
-                    selected={section.startDate ?? undefined}
+                    selected={section.startDate ?? undefined} // Usamos startDate aquí
                     onSelect={(date) => {
-                      // Asegúrate de que 'date' no sea undefined antes de actualizar el estado
-                      if (date) {
-                        updateSection(index, "startDate", date);
-                      } else {
-                        updateSection(index, "startDate", null); // En caso de que no se seleccione una fecha, asignamos null
-                      }
+                      // Actualizamos la fecha de inicio
+                      updateSection(index, "startDate", date ?? null);
                     }}
                     initialFocus
                   />
@@ -202,14 +198,16 @@ const AcademicForm: React.FC<AcademicFormProps> = ({
                   <PopoverContent className="w-auto p-0" align="start">
                     <CalendarIcon
                       mode="single"
-                      selected={section.startDate ?? undefined}
+                      selected={
+                        section.endDate instanceof Date
+                          ? section.endDate
+                          : section.endDate
+                          ? new Date(section.endDate)
+                          : undefined
+                      }
                       onSelect={(date) => {
-                        // Asegúrate de que 'date' no sea undefined antes de actualizar el estado
-                        if (date) {
-                          updateSection(index, "startDate", date);
-                        } else {
-                          updateSection(index, "startDate", null); // En caso de que no se seleccione una fecha, asignamos null
-                        }
+                        // Actualizamos la fecha de terminación
+                        updateSection(index, "endDate", date ?? null);
                       }}
                       initialFocus
                     />
