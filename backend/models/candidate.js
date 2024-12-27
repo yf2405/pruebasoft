@@ -15,8 +15,7 @@ const candidateSchema = new mongoose.Schema({
     addedValue: { type: String, required: true },
     addedHappyWorkValue: { type: String, required: true },
     addedProfessionalValue: { type: String, required: true },
-    ideasProject: { type: String, required: true },
-
+ 
 });
 
 const Candidate = mongoose.model('Candidate', candidateSchema);

@@ -19,10 +19,18 @@ export default function ProfilePage() {
     return <div>Error: {error}</div>;
   }
 
-  const candidate = candidates[0];
+  const defaultCandidate = {
+    fullName: "Francisco José Benavides",
+    profession: "Ingeniero Químico",
+    email: "johndoe@example.com",
+    documentNumber: "0000000000"
+  };
 
-  return !candidate ? (
-    <div className="min-w-max  bg-gray-100 font-sans">
+  const candidate =
+    candidates && candidates.length > 0 ? candidates[0] : defaultCandidate;
+
+  return (
+    <div className="min-w-max bg-gray-100 font-sans">
       {/* Header */}
       <div
         className="bg-blue-600 relative h-[200px] md:h-[338px] top-[-1px]"
@@ -51,7 +59,7 @@ export default function ProfilePage() {
           <Button
             variant="secondary"
             size="sm"
-            className="bg-white text-gray-800 hover:bg-gray-100  w-[107px] rounded-3xl"
+            className="bg-white text-gray-800 hover:bg-gray-100 w-[107px] rounded-3xl"
           >
             Editar
           </Button>
@@ -85,11 +93,9 @@ export default function ProfilePage() {
               {/* Mobile View */}
               <div className="md:hidden text-start">
                 <h1 className="text-xl font-bold text-blue-900">
-                  {candidate?.fullName || "Francisco José Benavides"}
+                  {candidate.fullName}
                 </h1>
-                <p className="text-gray-600">
-                  {candidate?.profession || "Ingeniero Químico"}
-                </p>
+                <p className="text-gray-600">{candidate.profession}</p>
               </div>
 
               {/* Desktop View */}
@@ -98,26 +104,22 @@ export default function ProfilePage() {
                   Bienvenido
                 </h2>
                 <h1 className="text-3xl font-bold text-blue-900">
-                  {candidate?.fullName || "Francisco José Benavides"}
+                  {candidate.fullName}
                 </h1>
                 <div className="flex h-[55px] gap-[32px] mt-4">
                   <div className="w-[256px] gap-[18px]">
                     <span className="text-gray-600 text-sm">Email:</span>
-                    <div className="text-gray-800">
-                      {candidate?.email || "johndoe@example.com"}
-                    </div>
+                    <div className="text-gray-800">{candidate.email}</div>
                   </div>
                   <div className="w-[256px] gap-[18px]">
                     <span className="text-gray-600 text-sm">Documento:</span>
                     <div className="text-gray-800">
-                      {candidate?.documentNumber || "0000000000"}
+                      {candidate.documentNumber}
                     </div>
                   </div>
                   <div className="w-[256px] gap-[18px]">
                     <span className="text-gray-600 text-sm">Profesión:</span>
-                    <div className="text-gray-800">
-                      {candidate?.profession || "Ingeniero Químico"}
-                    </div>
+                    <div className="text-gray-800">{candidate.profession}</div>
                   </div>
                 </div>
                 <div className="flex justify-end mt-4">
@@ -134,7 +136,5 @@ export default function ProfilePage() {
         </Card>
       </div>
     </div>
-  ) : (
-    <div>{/* resto del componente con datos reales */}</div>
   );
 }

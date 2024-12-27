@@ -4,7 +4,8 @@ import {
   Briefcase,
   Building2,
   Clock,
-  Award
+  Award,
+  Trash2
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,8 +13,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import useWorkExperienceStore from "@/api/useWorkExperienceStore";
 import { useEffect } from "react";
 const WorkExperienceCard: React.FC = () => {
-  const { loading, error, fetchWorkExperiences, workExperiences } =
-    useWorkExperienceStore();
+  const {
+    loading,
+    error,
+    fetchWorkExperiences,
+    workExperiences,
+    deleteWorkExperience
+  } = useWorkExperienceStore();
 
   useEffect(() => {
     fetchWorkExperiences();
@@ -49,11 +55,12 @@ const WorkExperienceCard: React.FC = () => {
                 <PenSquare className="h-4 w-4" />
               </Button>
               <Button
+                onClick={() => deleteWorkExperience(experience._id)}
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-white hover:text-white/90"
               >
-                <Copy className="h-4 w-4" />
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           </CardHeader>

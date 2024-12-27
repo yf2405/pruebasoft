@@ -17,9 +17,11 @@ export default function WorkExperience() {
   }, [fetchWorkExperiences]);
 
   return (
-    <div className="p-6">
+    <div className="">
       {workExperiences && workExperiences.length > 0 ? (
-        <WorkExperienceCard />
+        <div className="p6">
+          <WorkExperienceCard />
+        </div>
       ) : (
         <WorkForm
           loading={loading}

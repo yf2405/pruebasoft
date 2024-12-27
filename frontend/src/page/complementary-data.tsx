@@ -10,8 +10,20 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Save, Facebook, Twitter, Instagram } from "lucide-react";
+import useCandidateStore from "@/api/candidates";
 
 export default function ComplementaryData() {
+  const { formData, addCandidate } = useCandidateStore();
+
+  const handleSave = async () => {
+    try {
+      await addCandidate(formData);
+      alert("Información guardada exitosamente");
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
+      alert("Ocurrió un error al guardar la información.");
+    }
+  };
   return (
     <div className="flex justify-center items-center py-9 bg-gray-50">
       <div className="w-full max-w-[1118px] p-6 bg-white rounded-lg shadow-md">
@@ -54,7 +66,10 @@ export default function ComplementaryData() {
             </div>
 
             <div className="flex justify-center">
-              <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:from-purple-700 hover:to-cyan-600 px-6 py-3 rounded-[50px]">
+              <Button
+                onClick={handleSave}
+                className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:from-purple-700 hover:to-cyan-600 px-6 py-3 rounded-[50px]"
+              >
                 <Save className="mr-2 h-4 w-4" />
                 Guardar información
               </Button>

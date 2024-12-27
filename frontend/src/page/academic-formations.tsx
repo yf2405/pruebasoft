@@ -3,16 +3,23 @@ import AcademicForm from "@/components/formcompoents/academic-form";
 import EducationCard from "@/components/formcompoents/education-card";
 
 const AcademicFormations: React.FC = () => {
-  const { academics, fetchAcademics, createAcademic, loading, error } =
-    useAcademicStore();
+  const {
+    academics,
+    fetchAcademics,
+    deleteAcademic,
+    createAcademic,
+    loading,
+    error
+  } = useAcademicStore();
 
-  return academics ? (
+  return academics && academics.length > 0 ? (
     <div className="p-6">
       <EducationCard
         academics={academics}
         fetchAcademics={fetchAcademics}
         loading={loading}
         error={error}
+        deleteAcademic={deleteAcademic}
       />
     </div>
   ) : (

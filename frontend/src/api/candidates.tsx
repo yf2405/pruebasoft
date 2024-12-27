@@ -13,17 +13,21 @@ interface Candidate {
   phoneNumber: string;
   linkedin?: string;
   addedValue: string;
+  addedHappyWorkValue: String;
+  addedProfessionalValue: String;
 }
 
 interface CandidateStore {
   candidates: Candidate[];
   loading: boolean;
   error: string | null;
+  formData: Candidate;
   fetchCandidates: () => Promise<void>;
   getCandidateById: (id: string) => Promise<Candidate | null>;
   addCandidate: (candidate: Candidate) => Promise<void>;
   updateCandidate: (id: string, candidate: Partial<Candidate>) => Promise<void>;
   deleteCandidate: (id: string) => Promise<void>;
+  setFormData: (data: Candidate) => void;
 }
 
 const API_BASE_URL = "http://localhost:5000/api/candidate";
@@ -32,6 +36,24 @@ const useCandidateStore = create<CandidateStore>((set) => ({
   candidates: [],
   loading: false,
   error: null,
+  formData: {
+    salaryRange: "",
+    professionalLevel: "",
+    fullName: "",
+    profession: "",
+    specialization: "",
+    documentNumber: "",
+    city: "",
+    willingToRelocate: false,
+    email: "",
+    phoneNumber: "",
+    linkedin: "",
+    addedValue: "",
+    addedHappyWorkValue: "",
+    addedProfessionalValue: ""
+  },
+
+  setFormData: (data) => set({ formData: data }),
 
   fetchCandidates: async () => {
     set({ loading: true, error: null });
@@ -65,7 +87,10 @@ const useCandidateStore = create<CandidateStore>((set) => ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(candidate)
       });
-      if (!response.ok) throw new Error("Error al agregar el candidato");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al agregar el candidato");
+      }
       const newCandidate = await response.json();
       set((state) => ({
         candidates: [...state.candidates, newCandidate],

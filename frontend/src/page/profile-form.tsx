@@ -9,22 +9,32 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { Linkedin } from "lucide-react";
 import useCandidateStore from "@/api/candidates";
 import { useEffect } from "react";
+import ProfileData from "@/components/profile_data_components/profile-data";
 
 export default function ProfileForm() {
-  const { candidates, loading, error, fetchCandidates, deleteCandidate } =
+  const { formData, setFormData, fetchCandidates, candidates, loading, error } =
     useCandidateStore();
 
   useEffect(() => {
     fetchCandidates();
   }, [fetchCandidates]);
 
-  const handleDelete = (id: string) => {
-    deleteCandidate(id);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
   };
 
+  const handleSelectChange = (id: string, value: string) => {
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const handleSwitchChange = (checked: boolean) => {
+    setFormData({ ...formData, willingToRelocate: checked });
+  };
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -33,79 +43,23 @@ export default function ProfileForm() {
     return <div>Error: {error}</div>;
   }
 
-  return !candidates ? (
+  return candidates && candidates.length > 0 ? (
     <div>
-      {" "}
-      <div>
-        <h1>Lista de Candidatos</h1>
-        <div className="max-w-full p-6 space-y-6">
-          {/* Header Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-[#023D6A] font-medium text-lg">
-                Datos personales
-              </h2>
-              <button className="text-gray-400 hover:text-gray-600">
-                <span className="sr-only">Edit</span>✎
-              </button>
-            </div>
-
-            {/* Professional Level & Salary */}
-            <div className="space-y-2">
-              <div className="flex gap-2 items-center text-sm">
-                <span className="text-gray-500">📋</span>
-                <span>Nivel profesional</span>
-              </div>
-              <p className="text-[#023D6A]">
-                Nivel 2 Postgrado con experiencia superior a 6 años
-              </p>
-
-              <div className="flex gap-2 items-center text-sm pt-2">
-                <span className="text-gray-500">💰</span>
-                <span>Rango salarial</span>
-              </div>
-              <p className="text-[#023D6A]">3.5ML en adelante</p>
-            </div>
-
-            {/* Personal Details */}
-            <div className="space-y-4 border-t border-b border-dashed border-gray-200 py-4">
-              {personalDetails.map((detail, index) => (
-                <div key={index} className="md:flex md:items-center md:gap-4">
-                  <div className="bg-[#CDFDF3] text-xs font-medium px-3 py-1 rounded-full w-fit h-[22px] mb-1 md:mb-0 md:w-[140px] md:flex md:items-center">
-                    {detail.label}
-                  </div>
-                  <div className="text-[#023D6A] md:flex-1">{detail.value}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Additional Sections */}
-            <div className="space-y-4">
-              {additionalSections.map((section, index) => (
-                <div key={index}>
-                  <div className="flex gap-2 items-center text-sm">
-                    <span>{section.icon}</span>
-                    <span className="text-gray-600">{section.title}</span>
-                  </div>
-                  <p className="text-[#023D6A] mt-1 text-sm">
-                    {section.content}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <ProfileData candidates={candidates} />
     </div>
   ) : (
     <div className="max-w-6xl mx-auto p-8">
-      <form className="space-y-8">
+      <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
         {/* Top Full Width Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="salary">Rango salarial desde:</Label>
-            <Select>
-              <SelectTrigger id="salary" className="bg-gray-50">
+            <Label htmlFor="salaryRange">Rango salarial desde:</Label>
+            <Select
+              onValueChange={(value) =>
+                handleSelectChange("salaryRange", value)
+              }
+            >
+              <SelectTrigger id="salaryRange" className="bg-gray-50">
                 <SelectValue placeholder="Selecciona" />
               </SelectTrigger>
               <SelectContent>
@@ -117,9 +71,15 @@ export default function ProfileForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="level">¿Cuál es tu nivel profesional?</Label>
-            <Select>
-              <SelectTrigger id="level" className="bg-gray-50">
+            <Label htmlFor="professionalLevel">
+              ¿Cuál es tu nivel profesional?
+            </Label>
+            <Select
+              onValueChange={(value) =>
+                handleSelectChange("professionalLevel", value)
+              }
+            >
+              <SelectTrigger id="professionalLevel" className="bg-gray-50">
                 <SelectValue placeholder="Selecciona" />
               </SelectTrigger>
               <SelectContent>
@@ -137,6 +97,8 @@ export default function ProfileForm() {
             <Label htmlFor="fullName">Nombre completo</Label>
             <Input
               id="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
               placeholder="Escribe aquí..."
               className="bg-gray-50"
             />
@@ -146,6 +108,8 @@ export default function ProfileForm() {
             <Label htmlFor="profession">Profesión</Label>
             <Input
               id="profession"
+              value={formData.profession}
+              onChange={handleChange}
               placeholder="Escribe aquí..."
               className="bg-gray-50"
             />
@@ -155,15 +119,19 @@ export default function ProfileForm() {
             <Label htmlFor="specialization">Especialización</Label>
             <Input
               id="specialization"
+              value={formData.specialization}
+              onChange={handleChange}
               placeholder="Escribe aquí..."
               className="bg-gray-50"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="document">Número de documento</Label>
+            <Label htmlFor="documentNumber">Número de documento</Label>
             <Input
-              id="document"
+              id="documentNumber"
+              value={formData.documentNumber}
+              onChange={handleChange}
               placeholder="Escribe aquí..."
               className="bg-gray-50"
             />
@@ -171,7 +139,9 @@ export default function ProfileForm() {
 
           <div className="space-y-2">
             <Label htmlFor="city">Ciudad donde buscas empleo</Label>
-            <Select>
+            <Select
+              onValueChange={(value) => handleSelectChange("city", value)}
+            >
               <SelectTrigger id="city" className="bg-gray-50">
                 <SelectValue placeholder="Selecciona" />
               </SelectTrigger>
@@ -184,12 +154,18 @@ export default function ProfileForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="relocation" className="block mb-2">
+            <Label htmlFor="willingToRelocate" className="block mb-2">
               ¿Estás dispuesto a trasladarte?
             </Label>
             <div className="flex items-center space-x-2">
-              <Switch id="relocation" />
-              <Label htmlFor="relocation">No</Label>
+              <Switch
+                id="willingToRelocate"
+                checked={formData.willingToRelocate}
+                onCheckedChange={handleSwitchChange}
+              />
+              <Label htmlFor="willingToRelocate">
+                {formData.willingToRelocate ? "Sí" : "No"}
+              </Label>
             </div>
           </div>
 
@@ -197,6 +173,8 @@ export default function ProfileForm() {
             <Label htmlFor="email">Correo electrónico</Label>
             <Input
               id="email"
+              value={formData.email}
+              onChange={handleChange}
               type="email"
               placeholder="Escribe aquí..."
               className="bg-gray-50"
@@ -204,9 +182,11 @@ export default function ProfileForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Número de celular</Label>
+            <Label htmlFor="phoneNumber">Número de celular</Label>
             <Input
-              id="phone"
+              id="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
               type="tel"
               placeholder="Escribe aquí..."
               className="bg-gray-50"
@@ -214,48 +194,55 @@ export default function ProfileForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="linkedin">Linkedin</Label>
-            <div className="relative">
-              <Input
-                id="linkedin"
-                placeholder="Escribe aquí..."
-                className="bg-gray-50 pr-10"
-              />
-              <Linkedin className="absolute right-3 top-2.5 h-5 w-5 text-[#0A66C2]" />
-            </div>
+            <Label htmlFor="linkedin">LinkedIn</Label>
+            <Input
+              id="linkedin"
+              value={formData.linkedin}
+              onChange={handleChange}
+              placeholder="Escribe aquí..."
+              className="bg-gray-50 pr-10"
+            />
           </div>
         </div>
 
         {/* Full Width Fields */}
         <div className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="value">
+            <Label htmlFor="addedValue">
               ¿Qué valor agregado le ofreces a una empresa que te contrata? ¿Qué
               te diferencia de otras personas?
             </Label>
             <Textarea
-              id="value"
-              placeholder="Escríbelas aquí..."
+              id="addedValue"
+              value={formData.addedValue}
+              onChange={handleChange}
+              placeholder="Escríbelo aquí..."
               className="bg-gray-50 min-h-[150px]"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="happiness">
-                Qué te hace feliz a nivel laboral
+              <Label htmlFor="addedHappyWorkValue">
+                ¿Qué te hace feliz a nivel laboral?
               </Label>
               <Textarea
-                id="happiness"
+                id="addedHappyWorkValue"
+                value={formData.addedHappyWorkValue}
+                onChange={handleChange}
                 placeholder="Escribe aquí..."
                 className="bg-gray-50 min-h-[100px]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="talent">Cuál es tu talento profesional</Label>
+              <Label htmlFor="addedProfessionalValue">
+                ¿Cuál es tu talento profesional?
+              </Label>
               <Textarea
-                id="talent"
+                id="addedProfessionalValue"
+                value={formData.addedProfessionalValue}
+                onChange={handleChange}
                 placeholder="Escribe aquí..."
                 className="bg-gray-50 min-h-[100px]"
               />
@@ -266,56 +253,3 @@ export default function ProfileForm() {
     </div>
   );
 }
-
-const personalDetails = [
-  { label: "Nombre", value: "Francisco José Benavides" },
-  { label: "Profesión", value: "Ingeniero Civil" },
-  { label: "Especialización", value: "Subsuelo" },
-  { label: "Número de documento", value: "1997216534" },
-  { label: "Ciudad donde busco", value: "Bogotá" },
-  {
-    label: "Abierto a nueva ubicación",
-    value: (
-      <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded-full bg-blue-600"></div>
-        <span>Sí</span>
-      </div>
-    )
-  },
-  { label: "Correo electrónico", value: "FRJose@gmail.com" },
-  { label: "Número de celular", value: "3006548900" },
-  {
-    label: "Red profesional",
-    value: (
-      <div className="flex items-center gap-2">
-        <Linkedin className="h-4 w-4" />
-        <span>@FRJose</span>
-      </div>
-    )
-  }
-];
-
-const additionalSections = [
-  {
-    icon: "👥",
-    title: "Valor agregado personal",
-    content:
-      "Habilidades de liderazgo y colaboración, con experiencia en dirigir equipos orientados hacia el logro de objetivos comunes, fomentando un ambiente de trabajo positivo y productivo."
-  },
-  {
-    icon: "❤️",
-    title: "Lo que me hace feliz",
-    content: "transformar ideas creativas en campañas visualmente impactantes"
-  },
-  {
-    icon: "⭐",
-    title: "Talento profesional",
-    content: "Creativo, Innovador, Analítico, Visionario, Resolutivo"
-  },
-  {
-    icon: "💡",
-    title: "Ideas, proyectos o actividades a futuro",
-    content:
-      "Mi objetivo final es ser reconocido como un referente en mi industria, alguien que no solo entiende y responde a las necesidades del mercado, sino que lo hace con integridad, pasión y una visión clara hacia un futuro mejor."
-  }
-];

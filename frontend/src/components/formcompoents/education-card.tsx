@@ -14,7 +14,8 @@ export default function EducationCard({
   academics,
   fetchAcademics,
   loading,
-  error
+  error,
+  deleteAcademic
 }: any) {
   // Fetch data when the component is mounted
   useEffect(() => {
@@ -48,7 +49,12 @@ export default function EducationCard({
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <PenSquare className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button
+                onClick={() => deleteAcademic(study._id)}
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+              >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>

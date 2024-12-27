@@ -261,15 +261,6 @@ export default function WorkForm({
               espacio puede generar que tu perfil no sea aprobado. Si no tienes
               fotos que generen valor, deja este espacio en blanco.
             </p>
-            <input
-              type="file"
-              multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files || []);
-                handleChange(index, "recursosAdicionales", files);
-              }}
-              className="text-white"
-            />
           </div>
         </div>
       ))}
