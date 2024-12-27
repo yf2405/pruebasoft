@@ -30,7 +30,7 @@ interface CandidateStore {
   setFormData: (data: Candidate) => void;
 }
 
-const API_BASE_URL = "http://localhost:5000/api/candidate";
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}api/candidate`;
 
 const useCandidateStore = create<CandidateStore>((set) => ({
   candidates: [],

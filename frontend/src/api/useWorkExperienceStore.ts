@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api/work"; // Reemplaza con tu URL base de la API
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}api/work`; 
 
 // Define el tipo para una experiencia laboral
 export type WorkExperience = {
