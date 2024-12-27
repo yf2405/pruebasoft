@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGO)
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.use(cors({ origin: 'https://pruebasoft-frontend.onrender.com' }));
+app.use(cors({ origin: 'http://localhost:5173' }));
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
