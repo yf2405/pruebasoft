@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
- "scripts": {
-  "dev": "nodemon index.js",
-  "start": "node index.js",
-  "build": "echo 'No build step needed'"
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "build": "echo 'No build step needed'"
   },
   "keywords": [],
   "author": "",
